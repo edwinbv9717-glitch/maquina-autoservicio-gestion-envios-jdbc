@@ -1,0 +1,14 @@
+EVIDENCIA AA2_EV01
+CONEXIÓN A BASE DE DATOS MEDIANTE JDBC
+
+Proyecto:
+Máquina de Autoservicio para Gestión de Envíos
+
+Repositorio GitHub:
+https://github.com/edwinbv9717-glitch/maquina-autoservicio-gestion-envios-jdbc.git
+
+Rama:
+master
+
+Commit:
+851b0d7 - Implementacion del CRUD de envios con JDBC
