@@ -116,4 +116,12 @@ public class Envio {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
+
+    public void setFechaCreacion(String fechaCreacion) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void setValorTotal(double valorTotal) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

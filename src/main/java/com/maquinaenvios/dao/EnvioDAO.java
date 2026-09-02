@@ -258,54 +258,57 @@ public class EnvioDAO {
     // MÉTODO 4: ACTUALIZAR ENVÍO
     // ============================================================
 
-    public boolean actualizar(Envio envio) {
+   public boolean actualizar(Envio envio) {
 
-        String sql = """
-                UPDATE envio
-                SET
-                    numero_guia = ?,
-                    id_usuario = ?,
-                    id_remitente = ?,
-                    id_destinatario = ?,
-                    id_ciudad_origen = ?,
-                    id_ciudad_destino = ?,
-                    id_servicio = ?,
-                    id_estado = ?,
-                    valor_total = ?,
-                    observaciones = ?
-                WHERE id_envio = ?
-                """;
+    String sql = "UPDATE envio SET "
+            + "numero_guia = ?, "
+            + "id_usuario = ?, "
+            + "id_remitente = ?, "
+            + "id_destinatario = ?, "
+            + "id_ciudad_origen = ?, "
+            + "id_ciudad_destino = ?, "
+            + "id_servicio = ?, "
+            + "id_estado = ?, "
+            + "valor_total = ?, "
+            + "observaciones = ? "
+            + "WHERE id_envio = ?";
 
-        try (Connection conexion = ConexionBD.conectar();
-             PreparedStatement sentencia = conexion.prepareStatement(sql)) {
+    try (Connection conexion = ConexionBD.conectar();
+         PreparedStatement ps = conexion.prepareStatement(sql)) {
 
-            sentencia.setString(1, envio.getNumeroGuia());
-            sentencia.setInt(2, envio.getIdUsuario());
-            sentencia.setInt(3, envio.getIdRemitente());
-            sentencia.setInt(4, envio.getIdDestinatario());
-            sentencia.setInt(5, envio.getIdCiudadOrigen());
-            sentencia.setInt(6, envio.getIdCiudadDestino());
-            sentencia.setInt(7, envio.getIdServicio());
-            sentencia.setInt(8, envio.getIdEstado());
-            sentencia.setBigDecimal(9, envio.getValorTotal());
-            sentencia.setString(10, envio.getObservaciones());
+        ps.setString(1, envio.getNumeroGuia());
 
-            sentencia.setLong(11, envio.getIdEnvio());
+        ps.setInt(2, envio.getIdUsuario());
 
-            int filasAfectadas = sentencia.executeUpdate();
+        ps.setInt(3, envio.getIdRemitente());
 
-            return filasAfectadas > 0;
+        ps.setInt(4, envio.getIdDestinatario());
 
-        } catch (SQLException e) {
+        ps.setInt(5, envio.getIdCiudadOrigen());
 
-            System.out.println("Error al actualizar el envío: "
-                    + e.getMessage());
+        ps.setInt(6, envio.getIdCiudadDestino());
 
-            return false;
-        }
+        ps.setInt(7, envio.getIdServicio());
+
+        ps.setInt(8, envio.getIdEstado());
+
+        ps.setBigDecimal(9, envio.getValorTotal());
+
+        ps.setString(10, envio.getObservaciones());
+
+        ps.setLong(11, envio.getIdEnvio());
+
+        int filasActualizadas = ps.executeUpdate();
+
+        return filasActualizadas > 0;
+
+    } catch (SQLException e) {
+
+        System.out.println("Error al actualizar envío: " + e.getMessage());
+
+        return false;
     }
-
-
+}
     // ============================================================
     // MÉTODO 5: ELIMINAR ENVÍO
     // ============================================================
