@@ -1,14 +1,23 @@
-EVIDENCIA AA2_EV01
-CONEXIÓN A BASE DE DATOS MEDIANTE JDBC
+REPOSITORIO GITHUB
 
-Proyecto:
-Máquina de Autoservicio para Gestión de Envíos
-
-Repositorio GitHub:
-https://github.com/edwinbv9717-glitch/maquina-autoservicio-gestion-envios-jdbc.git
+Enlace del repositorio:
+https://github.com/edwinbv9717-glitch/maquina-autoservicio-gestion-envios-jdbc
 
 Rama:
 master
 
-Commit:
-851b0d7 - Implementacion del CRUD de envios con JDBC
+Proyecto:
+MaquinaAutoservicioGestionEnvios
+
+Descripción:
+Módulo web para la gestión de envíos desarrollado mediante Java,
+Servlets, JSP, JDBC, Maven y MySQL.
+
+Funcionalidades:
+- Registro de envíos.
+- Consulta de envíos.
+- Búsqueda de envíos por ID.
+- Actualización de envíos.
+- Eliminación de envíos.
+- Conexión con base de datos MySQL.
+- Implementación del CRUD mediante JDBC.
