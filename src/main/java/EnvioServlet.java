@@ -1,6 +1,6 @@
 package com.maquinaenvios.servlet;
 
-import com.maquinaenvios.dao.EnvioDAO;
+import com.maquinaenvios.dao.HibernateEnvioDAO;
 import com.maquinaenvios.modelo.Envio;
 
 import jakarta.servlet.ServletException;
@@ -15,12 +15,12 @@ import java.math.BigDecimal;
 @WebServlet("/EnvioServlet")
 public class EnvioServlet extends HttpServlet {
 
-    private EnvioDAO envioDAO;
+    private HibernateEnvioDAO envioDAO;
 
     @Override
     public void init() throws ServletException {
-        envioDAO = new EnvioDAO();
-    }
+    envioDAO = new HibernateEnvioDAO();
+        }
 
     @Override
     protected void doPost(

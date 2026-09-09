@@ -1,23 +1,146 @@
 package com.maquinaenvios.modelo;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+/**
+ * Entidad Hibernate que representa un envío.
+ *
+ * Esta clase está relacionada con la tabla "envio"
+ * de la base de datos gestion_envios.
+ *
+ * Hibernate utiliza esta clase para convertir los
+ * registros de la base de datos en objetos Java
+ * y viceversa.
+ */
+@Entity
+@Table(name = "envio")
 public class Envio {
 
+    /**
+     * Identificador principal del envío.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_envio")
     private long idEnvio;
+
+    /**
+     * Número único de guía del envío.
+     */
+    @Column(
+        name = "numero_guia",
+        nullable = false,
+        unique = true,
+        length = 30
+    )
     private String numeroGuia;
+
+    /**
+     * Usuario que registra el envío.
+     */
+    @Column(
+        name = "id_usuario",
+        nullable = false
+    )
     private int idUsuario;
+
+    /**
+     * Identificador del contacto remitente.
+     */
+    @Column(
+        name = "id_remitente",
+        nullable = false
+    )
     private int idRemitente;
+
+    /**
+     * Identificador del contacto destinatario.
+     */
+    @Column(
+        name = "id_destinatario",
+        nullable = false
+    )
     private int idDestinatario;
+
+    /**
+     * Ciudad de origen del envío.
+     */
+    @Column(
+        name = "id_ciudad_origen",
+        nullable = false
+    )
     private int idCiudadOrigen;
+
+    /**
+     * Ciudad de destino del envío.
+     */
+    @Column(
+        name = "id_ciudad_destino",
+        nullable = false
+    )
     private int idCiudadDestino;
+
+    /**
+     * Servicio utilizado para realizar el envío.
+     */
+    @Column(
+        name = "id_servicio",
+        nullable = false
+    )
     private int idServicio;
+
+    /**
+     * Estado actual del envío.
+     */
+    @Column(
+        name = "id_estado",
+        nullable = false
+    )
     private int idEstado;
-    private Timestamp fechaCreacion;
+
+    /**
+     * Fecha y hora en que se creó el envío.
+     *
+     * El valor es generado por la base de datos.
+     */
+    @Column(
+        name = "fecha_creacion",
+        insertable = false,
+        updatable = false
+)
+private Timestamp fechaCreacion;
+
+    /**
+     * Valor total del servicio de envío.
+     */
+    @Column(
+        name = "valor_total",
+        nullable = false,
+        precision = 12,
+        scale = 2
+    )
     private BigDecimal valorTotal;
+
+    /**
+     * Observaciones adicionales del envío.
+     */
+    @Column(
+        name = "observaciones",
+        length = 300
+    )
     private String observaciones;
 
+    /**
+     * Constructor vacío requerido por Hibernate.
+     */
     public Envio() {
     }
 
@@ -115,13 +238,5 @@ public class Envio {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
-    }
-
-    public void setFechaCreacion(String fechaCreacion) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setValorTotal(double valorTotal) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "https://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <session-factory>
+
+        <!-- ===================================================== -->
+        <!-- CONEXIÓN A MYSQL                                     -->
+        <!-- ===================================================== -->
+
+        <property name="hibernate.connection.driver_class">
+            com.mysql.cj.jdbc.Driver
+        </property>
+
+        <property name="hibernate.connection.url">
+            jdbc:mysql://localhost:3306/gestion_envios?useSSL=false&amp;serverTimezone=America/Bogota
+        </property>
+
+        <property name="hibernate.connection.username">
+            root
+        </property>
+
+        <property name="hibernate.connection.password">
+            Nicoll17*.17
+        </property>
+
+
+        <!-- ===================================================== -->
+        <!-- CONFIGURACIÓN DE HIBERNATE                            -->
+        <!-- ===================================================== -->
+
+        <property name="hibernate.dialect">
+            org.hibernate.dialect.MySQLDialect
+        </property>
+
+        <property name="hibernate.show_sql">
+            true
+        </property>
+
+        <property name="hibernate.format_sql">
+            true
+        </property>
+
+
+        <!-- ===================================================== -->
+        <!-- MAPEO DE LA CLASE ENVIO                               -->
+        <!-- ===================================================== -->
+
+        <mapping class="com.maquinaenvios.modelo.Envio"/>
+
+    </session-factory>
+
+</hibernate-configuration>

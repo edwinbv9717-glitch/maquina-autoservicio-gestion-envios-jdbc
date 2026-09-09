@@ -1,6 +1,7 @@
 package com.maquinaenvios.servlet;
 
-import com.maquinaenvios.dao.EnvioDAO;
+import com.maquinaenvios.dao.HibernateEnvioDAO;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,16 +10,31 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * Servlet encargado de eliminar un envío.
+ *
+ * Utiliza Hibernate como framework de persistencia.
+ */
 @WebServlet("/EliminarEnvioServlet")
 public class EliminarEnvioServlet extends HttpServlet {
 
-    private final EnvioDAO envioDAO = new EnvioDAO();
+    // DAO Hibernate
+    private final HibernateEnvioDAO envioDAO =
+            new HibernateEnvioDAO();
 
+    /**
+     * POST:
+     * Recibe el ID del envío y realiza
+     * la eliminación mediante Hibernate.
+     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws ServletException, IOException {
 
-        String idParametro = request.getParameter("idEnvio");
+        String idParametro =
+                request.getParameter("idEnvio");
 
         // Validar que se haya recibido el ID
         if (idParametro == null || idParametro.isBlank()) {
@@ -28,23 +44,29 @@ public class EliminarEnvioServlet extends HttpServlet {
                     "No se recibió el ID del envío."
             );
 
-            request.getRequestDispatcher("resultado.jsp")
-                    .forward(request, response);
+            request.getRequestDispatcher(
+                    "resultado.jsp"
+            ).forward(request, response);
 
             return;
         }
 
         try {
 
-            long idEnvio = Long.parseLong(idParametro);
+            // Convertir el ID
+            long idEnvio =
+                    Long.parseLong(idParametro);
 
-            boolean eliminado = envioDAO.eliminar(idEnvio);
+            // Eliminar mediante Hibernate
+            boolean eliminado =
+                    envioDAO.eliminar(idEnvio);
 
             if (eliminado) {
 
-                // Si se eliminó correctamente,
-                // regresamos al listado
-                response.sendRedirect("ConsultaEnvioServlet");
+                // Regresar al listado
+                response.sendRedirect(
+                        "ConsultaEnvioServlet"
+                );
 
             } else {
 
@@ -53,8 +75,9 @@ public class EliminarEnvioServlet extends HttpServlet {
                         "No fue posible eliminar el envío."
                 );
 
-                request.getRequestDispatcher("resultado.jsp")
-                        .forward(request, response);
+                request.getRequestDispatcher(
+                        "resultado.jsp"
+                ).forward(request, response);
             }
 
         } catch (NumberFormatException e) {
@@ -64,18 +87,23 @@ public class EliminarEnvioServlet extends HttpServlet {
                     "El ID del envío no es válido."
             );
 
-            request.getRequestDispatcher("resultado.jsp")
-                    .forward(request, response);
+            request.getRequestDispatcher(
+                    "resultado.jsp"
+            ).forward(request, response);
 
         } catch (Exception e) {
 
+            e.printStackTrace();
+
             request.setAttribute(
                     "mensaje",
-                    "Error al eliminar el envío: " + e.getMessage()
+                    "Error al eliminar el envío: "
+                    + e.getMessage()
             );
 
-            request.getRequestDispatcher("resultado.jsp")
-                    .forward(request, response);
+            request.getRequestDispatcher(
+                    "resultado.jsp"
+            ).forward(request, response);
         }
     }
 }

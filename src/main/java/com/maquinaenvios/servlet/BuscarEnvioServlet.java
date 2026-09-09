@@ -1,6 +1,6 @@
 package com.maquinaenvios.servlet;
 
-import com.maquinaenvios.dao.EnvioDAO;
+import com.maquinaenvios.dao.HibernateEnvioDAO;
 import com.maquinaenvios.modelo.Envio;
 
 import jakarta.servlet.ServletException;
@@ -11,19 +11,34 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * Servlet encargado de buscar un envío
+ * mediante su identificador.
+ *
+ * Utiliza Hibernate como framework de persistencia.
+ */
 @WebServlet("/BuscarEnvioServlet")
 public class BuscarEnvioServlet extends HttpServlet {
 
-    private final EnvioDAO envioDAO = new EnvioDAO();
+    // DAO Hibernate
+    private final HibernateEnvioDAO envioDAO =
+            new HibernateEnvioDAO();
 
+    /**
+     * Método GET utilizado para realizar
+     * la búsqueda del envío.
+     */
     @Override
     protected void doGet(
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        String idParametro = request.getParameter("idEnvio");
+        // Obtener el ID enviado desde el formulario
+        String idParametro =
+                request.getParameter("idEnvio");
 
+        // Validar que el usuario haya ingresado un ID
         if (idParametro == null || idParametro.isBlank()) {
 
             request.setAttribute(
@@ -40,10 +55,15 @@ public class BuscarEnvioServlet extends HttpServlet {
 
         try {
 
-            long idEnvio = Long.parseLong(idParametro);
+            // Convertir el ID recibido a número
+            long idEnvio =
+                    Long.parseLong(idParametro);
 
-            Envio envio = envioDAO.buscarPorId(idEnvio);
+            // Buscar el envío mediante Hibernate
+            Envio envio =
+                    envioDAO.buscarPorId(idEnvio);
 
+            // Verificar si se encontró
             if (envio != null) {
 
                 request.setAttribute(
@@ -60,6 +80,7 @@ public class BuscarEnvioServlet extends HttpServlet {
                 );
             }
 
+            // Regresar al JSP
             request.getRequestDispatcher(
                     "buscar-envio.jsp"
             ).forward(request, response);
@@ -73,6 +94,20 @@ public class BuscarEnvioServlet extends HttpServlet {
 
             request.getRequestDispatcher(
                     "buscar-envio.jsp"
+            ).forward(request, response);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            request.setAttribute(
+                    "mensaje",
+                    "Error al buscar el envío: "
+                    + e.getMessage()
+            );
+
+            request.getRequestDispatcher(
+                    "resultado.jsp"
             ).forward(request, response);
         }
     }

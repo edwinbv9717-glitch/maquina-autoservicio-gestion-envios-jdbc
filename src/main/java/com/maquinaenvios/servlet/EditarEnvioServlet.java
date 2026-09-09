@@ -1,6 +1,6 @@
 package com.maquinaenvios.servlet;
 
-import com.maquinaenvios.dao.EnvioDAO;
+import com.maquinaenvios.dao.HibernateEnvioDAO;
 import com.maquinaenvios.modelo.Envio;
 
 import jakarta.servlet.ServletException;
@@ -12,56 +12,117 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+/**
+ * Servlet encargado de mostrar y actualizar
+ * la información de un envío.
+ *
+ * Utiliza Hibernate para la persistencia
+ * de los datos.
+ */
 @WebServlet("/EditarEnvioServlet")
 public class EditarEnvioServlet extends HttpServlet {
 
-    private final EnvioDAO envioDAO = new EnvioDAO();
+    // DAO Hibernate
+    private final HibernateEnvioDAO envioDAO =
+            new HibernateEnvioDAO();
 
+    /**
+     * GET:
+     * Busca el envío y carga sus datos
+     * en el formulario de edición.
+     */
     @Override
     protected void doGet(
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        String idParametro = request.getParameter("idEnvio");
+        String idParametro =
+                request.getParameter("idEnvio");
 
+        // Validar ID
         if (idParametro == null || idParametro.isBlank()) {
+
             request.setAttribute(
                     "mensaje",
                     "No se recibió el ID del envío."
             );
 
-            request.getRequestDispatcher("resultado.jsp").forward(request, response);
+            request.getRequestDispatcher(
+                    "resultado.jsp"
+            ).forward(request, response);
+
             return;
         }
 
         try {
-            long idEnvio = Long.parseLong(idParametro);
-            Envio envio = envioDAO.buscarPorId(idEnvio);
 
+            // Convertir ID
+            long idEnvio =
+                    Long.parseLong(idParametro);
+
+            // Buscar mediante Hibernate
+            Envio envio =
+                    envioDAO.buscarPorId(idEnvio);
+
+            // Validar resultado
             if (envio == null) {
+
                 request.setAttribute(
                         "mensaje",
-                        "No se encontró el envío con ID: " + idEnvio
+                        "No se encontró el envío con ID: "
+                        + idEnvio
                 );
 
-                request.getRequestDispatcher("resultado.jsp").forward(request, response);
+                request.getRequestDispatcher(
+                        "resultado.jsp"
+                ).forward(request, response);
+
                 return;
             }
 
-            request.setAttribute("envio", envio);
-            request.getRequestDispatcher("editar-envio.jsp").forward(request, response);
+            // Enviar envío al formulario JSP
+            request.setAttribute(
+                    "envio",
+                    envio
+            );
+
+            request.getRequestDispatcher(
+                    "editar-envio.jsp"
+            ).forward(request, response);
 
         } catch (NumberFormatException e) {
+
             request.setAttribute(
                     "mensaje",
                     "El ID del envío no es válido."
             );
 
-            request.getRequestDispatcher("resultado.jsp").forward(request, response);
+            request.getRequestDispatcher(
+                    "resultado.jsp"
+            ).forward(request, response);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            request.setAttribute(
+                    "mensaje",
+                    "Error al cargar el envío: "
+                    + e.getMessage()
+            );
+
+            request.getRequestDispatcher(
+                    "resultado.jsp"
+            ).forward(request, response);
         }
     }
 
+    /**
+     * POST:
+     * Recibe los datos modificados desde el formulario
+     * y actualiza el envío utilizando Hibernate.
+     */
     @Override
     protected void doPost(
             HttpServletRequest request,
@@ -69,22 +130,63 @@ public class EditarEnvioServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            long idEnvio = Long.parseLong(request.getParameter("idEnvio"));
-            String numeroGuia = request.getParameter("numeroGuia");
-            int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-            int idRemitente = Integer.parseInt(request.getParameter("idRemitente"));
-            int idDestinatario = Integer.parseInt(request.getParameter("idDestinatario"));
-            int idCiudadOrigen = Integer.parseInt(request.getParameter("idCiudadOrigen"));
-            int idCiudadDestino = Integer.parseInt(request.getParameter("idCiudadDestino"));
-            int idServicio = Integer.parseInt(request.getParameter("idServicio"));
-            int idEstado = Integer.parseInt(request.getParameter("idEstado"));
-            
-            // CONVERSIÓN A BigDecimal para coincidir con EnvioDAO
-            BigDecimal valorTotal = new BigDecimal(request.getParameter("valorTotal"));
-            
-            String observaciones = request.getParameter("observaciones");
 
+            // Obtener ID
+            long idEnvio =
+                    Long.parseLong(
+                            request.getParameter("idEnvio")
+                    );
+
+            // Obtener información del formulario
+            String numeroGuia =
+                    request.getParameter("numeroGuia");
+
+            int idUsuario =
+                    Integer.parseInt(
+                            request.getParameter("idUsuario")
+                    );
+
+            int idRemitente =
+                    Integer.parseInt(
+                            request.getParameter("idRemitente")
+                    );
+
+            int idDestinatario =
+                    Integer.parseInt(
+                            request.getParameter("idDestinatario")
+                    );
+
+            int idCiudadOrigen =
+                    Integer.parseInt(
+                            request.getParameter("idCiudadOrigen")
+                    );
+
+            int idCiudadDestino =
+                    Integer.parseInt(
+                            request.getParameter("idCiudadDestino")
+                    );
+
+            int idServicio =
+                    Integer.parseInt(
+                            request.getParameter("idServicio")
+                    );
+
+            int idEstado =
+                    Integer.parseInt(
+                            request.getParameter("idEstado")
+                    );
+
+            BigDecimal valorTotal =
+                    new BigDecimal(
+                            request.getParameter("valorTotal")
+                    );
+
+            String observaciones =
+                    request.getParameter("observaciones");
+
+            // Crear objeto Envio
             Envio envio = new Envio();
+
             envio.setIdEnvio(idEnvio);
             envio.setNumeroGuia(numeroGuia);
             envio.setIdUsuario(idUsuario);
@@ -97,27 +199,53 @@ public class EditarEnvioServlet extends HttpServlet {
             envio.setValorTotal(valorTotal);
             envio.setObservaciones(observaciones);
 
-            boolean actualizado = envioDAO.actualizar(envio);
+            // Actualizar utilizando Hibernate
+            boolean actualizado =
+                    envioDAO.actualizar(envio);
 
             if (actualizado) {
-                response.sendRedirect("ConsultaEnvioServlet");
-            } else {
-                request.setAttribute(
-                        "mensaje",
-                        "No fue posible actualizar el envío en la base de datos."
+
+                // Regresar al listado
+                response.sendRedirect(
+                        "ConsultaEnvioServlet"
                 );
 
-                request.getRequestDispatcher("resultado.jsp").forward(request, response);
+            } else {
+
+                request.setAttribute(
+                        "mensaje",
+                        "No fue posible actualizar el envío."
+                );
+
+                request.getRequestDispatcher(
+                        "resultado.jsp"
+                ).forward(request, response);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace(); // Imprime la traza completa en la consola/Tomcat log para diagnóstico
+        } catch (NumberFormatException e) {
+
             request.setAttribute(
                     "mensaje",
-                    "Error al actualizar: " + e.getMessage()
+                    "Uno de los valores numéricos no es válido."
             );
 
-            request.getRequestDispatcher("resultado.jsp").forward(request, response);
+            request.getRequestDispatcher(
+                    "resultado.jsp"
+            ).forward(request, response);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            request.setAttribute(
+                    "mensaje",
+                    "Error al actualizar: "
+                    + e.getMessage()
+            );
+
+            request.getRequestDispatcher(
+                    "resultado.jsp"
+            ).forward(request, response);
         }
     }
 }
