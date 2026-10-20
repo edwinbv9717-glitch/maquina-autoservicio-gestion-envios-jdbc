@@ -1,3 +1,4 @@
+
 package com.maquinaenvios.modelo;
 
 import jakarta.persistence.Column;
@@ -11,30 +12,25 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
- * Entidad Hibernate que representa un envío.
+ * Entidad que representa un envío dentro del sistema
+ * Máquina de Autoservicio para Gestión de Envíos.
  *
- * Esta clase está relacionada con la tabla "envio"
- * de la base de datos gestion_envios.
+ * Hibernate utiliza esta clase para relacionar los
+ * objetos Java con la tabla envio de la base de datos.
  *
- * Hibernate utiliza esta clase para convertir los
- * registros de la base de datos en objetos Java
- * y viceversa.
+ * @author Edwin Bohórquez
  */
 @Entity
 @Table(name = "envio")
 public class Envio {
 
-    /**
-     * Identificador principal del envío.
-     */
+    /** Identificador principal del envío. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_envio")
     private long idEnvio;
 
-    /**
-     * Número único de guía del envío.
-     */
+    /** Número único de guía del envío. */
     @Column(
         name = "numero_guia",
         nullable = false,
@@ -43,84 +39,46 @@ public class Envio {
     )
     private String numeroGuia;
 
-    /**
-     * Usuario que registra el envío.
-     */
-    @Column(
-        name = "id_usuario",
-        nullable = false
-    )
+    /** Usuario que registra el envío. */
+    @Column(name = "id_usuario", nullable = false)
     private int idUsuario;
 
-    /**
-     * Identificador del contacto remitente.
-     */
-    @Column(
-        name = "id_remitente",
-        nullable = false
-    )
+    /** Identificador del contacto remitente. */
+    @Column(name = "id_remitente", nullable = false)
     private int idRemitente;
 
-    /**
-     * Identificador del contacto destinatario.
-     */
-    @Column(
-        name = "id_destinatario",
-        nullable = false
-    )
+    /** Identificador del contacto destinatario. */
+    @Column(name = "id_destinatario", nullable = false)
     private int idDestinatario;
 
-    /**
-     * Ciudad de origen del envío.
-     */
-    @Column(
-        name = "id_ciudad_origen",
-        nullable = false
-    )
+    /** Ciudad de origen del envío. */
+    @Column(name = "id_ciudad_origen", nullable = false)
     private int idCiudadOrigen;
 
-    /**
-     * Ciudad de destino del envío.
-     */
-    @Column(
-        name = "id_ciudad_destino",
-        nullable = false
-    )
+    /** Ciudad de destino del envío. */
+    @Column(name = "id_ciudad_destino", nullable = false)
     private int idCiudadDestino;
 
-    /**
-     * Servicio utilizado para realizar el envío.
-     */
-    @Column(
-        name = "id_servicio",
-        nullable = false
-    )
+    /** Servicio utilizado para realizar el envío. */
+    @Column(name = "id_servicio", nullable = false)
     private int idServicio;
 
-    /**
-     * Estado actual del envío.
-     */
-    @Column(
-        name = "id_estado",
-        nullable = false
-    )
+    /** Estado actual del envío. */
+    @Column(name = "id_estado", nullable = false)
     private int idEstado;
 
     /**
-     * Fecha y hora en que se creó el envío.
-     *
+     * Fecha y hora de creación.
      * El valor es generado por la base de datos.
      */
     @Column(
         name = "fecha_creacion",
         insertable = false,
         updatable = false
-)
-private Timestamp fechaCreacion;
+    )
+    private Timestamp fechaCreacion;
 
-    /**
-     * Valor total del servicio de envío.
-     */
+    /** Valor monetario total del envío. */
     @Column(
         name = "valor_total",
         nullable = false,
@@ -129,13 +87,8 @@ private Timestamp fechaCreacion;
     )
     private BigDecimal valorTotal;
 
-    /**
-     * Observaciones adicionales del envío.
-     */
-    @Column(
-        name = "observaciones",
-        length = 300
-    )
+    /** Observaciones adicionales del envío. */
+    @Column(name = "observaciones", length = 300)
     private String observaciones;
 
     /**

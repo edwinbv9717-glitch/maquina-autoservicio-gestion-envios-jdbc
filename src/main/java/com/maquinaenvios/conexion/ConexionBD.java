@@ -4,57 +4,83 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Administra la conexión entre la aplicación y MySQL.
+ *
+ * Las credenciales se obtienen de variables de entorno
+ * para evitar almacenar contraseñas en el código fuente.
+ *
+ * @author Edwin Bohórquez
+ */
 public class ConexionBD {
 
-    private static final String URL =
-            "jdbc:mysql://localhost:3306/gestion_envios?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+    // Dirección de la base de datos del proyecto.
+    private static final String URL = obtenerVariable(
+        "GESTION_DB_URL",
+        "jdbc:mysql://localhost:3306/gestion_envios"
+                + "?useSSL=false"
+                + "&allowPublicKeyRetrieval=true"
+                + "&serverTimezone=UTC"
+);
 
-    private static final String USUARIO = "root";
+    // Usuario de MySQL configurado en el equipo.
+    private static final String USUARIO = obtenerVariable(
+            "GESTION_DB_USER",
+            "root"
+    );
 
-    private static final String PASSWORD = "Nicoll17*.17";
+    /**
+     * Obtiene una variable de entorno o utiliza el valor
+     * predeterminado cuando está permitido.
+     */
+    private static String obtenerVariable(
+            String nombre,
+            String valorPredeterminado) {
 
-    public static Connection conectar() {
+        String valor = System.getenv(nombre);
+
+        if (valor == null || valor.isBlank()) {
+            return valorPredeterminado;
+        }
+
+        return valor;
+    }
+
+    /**
+     * Establece una conexión con la base de datos.
+     *
+     * @return conexión activa con MySQL
+     * @throws SQLException si faltan credenciales o falla
+     * la conexión con la base de datos
+     */
+    public static Connection conectar() throws SQLException {
+
+        // La contraseña no se almacena en el código fuente.
+        String password = System.getenv("GESTION_DB_PASSWORD");
+
+        if (password == null || password.isBlank()) {
+            throw new SQLException(
+                    "No está configurada la variable "
+                    + "de entorno GESTION_DB_PASSWORD."
+            );
+        }
 
         try {
-            // Cargar explícitamente el driver de MySQL para aplicaciones Web/Tomcat
+            // Carga el controlador JDBC de MySQL.
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            Connection conexion = DriverManager.getConnection(
-                    URL,
-                    USUARIO,
-                    PASSWORD
-            );
-
-            System.out.println("=================================");
-            System.out.println("CONEXIÓN EXITOSA CON MYSQL");
-            System.out.println("Base de datos: gestion_envios");
-            System.out.println("=================================");
-
-            return conexion;
-
         } catch (ClassNotFoundException e) {
-
-            System.out.println("=================================");
-            System.out.println("ERROR: NO SE ENCONTRÓ EL DRIVER JDBC DE MYSQL");
-            System.out.println("Mensaje: " + e.getMessage());
-            System.out.println("=================================");
-
-            e.printStackTrace();
-
-            return null;
-
-        } catch (SQLException e) {
-
-            System.out.println("=================================");
-            System.out.println("ERROR AL CONECTAR CON MYSQL");
-            System.out.println("Mensaje: " + e.getMessage());
-            System.out.println("Código SQL: " + e.getErrorCode());
-            System.out.println("Estado SQL: " + e.getSQLState());
-            System.out.println("=================================");
-
-            e.printStackTrace();
-
-            return null;
+            throw new SQLException(
+                    "No se encontró el controlador JDBC de MySQL.",
+                    e
+            );
         }
+
+        // Abre y devuelve la conexión.
+        return DriverManager.getConnection(
+                URL,
+                USUARIO,
+                password
+        );
     }
 }

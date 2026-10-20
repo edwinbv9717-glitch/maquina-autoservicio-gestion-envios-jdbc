@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
+import java.sql.SQLException;
 
 public class PruebaCRUD {
 
@@ -19,20 +20,25 @@ public class PruebaCRUD {
         System.out.println("======================================");
 
         // ============================================================
-        // 1. PROBAR CONEXIÓN
-        // ============================================================
+// 1. PROBAR CONEXIÓN
+// ============================================================
 
-        System.out.println("\n1. Probando conexion con MySQL...");
+System.out.println("\n1. Probando conexión con MySQL...");
 
-        Connection conexion = ConexionBD.conectar();
+Connection conexion;
 
-        if (conexion == null) {
+try {
+    conexion = ConexionBD.conectar();
 
-            System.out.println("✗ No se pudo conectar con MySQL.");
-            return;
-        }
+    System.out.println("✓ Conexión exitosa con MySQL.");
 
-        System.out.println("✓ Conexion exitosa con MySQL.");
+} catch (SQLException e) {
+
+    System.out.println("✗ No se pudo conectar con MySQL.");
+    System.out.println("Detalle: " + e.getMessage());
+
+    return;
+}
 
         // ============================================================
         // 2. CREAR DAO
